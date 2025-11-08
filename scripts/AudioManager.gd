@@ -1,13 +1,11 @@
 extends Node
 
-# Aynı anda kaç farklı ses çalınabilsin? (Havuz boyutu)
 var num_players = 30
 var bus = "master"
 
-var available_players = []  # Boşta olanlar (Kuyruk/Queue yapısı gibi kullanacağız)
+var available_players = [] 
 
 func _ready():
-	# Havuzu oluştur (Object Pooling)
 	for i in num_players:
 		var p = AudioStreamPlayer.new()
 		add_child(p)
@@ -20,7 +18,6 @@ func play_sfx(sound_stream: AudioStream, volume_db: float = 0.0, pitch_scale: fl
 	if sound_stream == null:
 		return
 		
-	# Havuzda boş oyuncu var mı?
 	if available_players.size() > 0:
 		# Havuzdan bir tane al (pop_front = kuyruğun başından al)
 		var p = available_players.pop_front()
@@ -31,9 +28,8 @@ func play_sfx(sound_stream: AudioStream, volume_db: float = 0.0, pitch_scale: fl
 	else:
 		print("AudioManager: Tüm ses kanalları dolu! Ses çalınamadı.")
 
-# Ses bitince çalışan geri dönüşüm fonksiyonu
+
 func _on_stream_finished(player):
-	# İşini bitiren oyuncuyu tekrar havuza (kuyruğun sonuna) ekle
 	available_players.append(player)
 	
 	
