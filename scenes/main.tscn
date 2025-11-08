@@ -1,0 +1,120 @@
+[gd_scene load_steps=14 format=3 uid="uid://bpw64nq6ctl1k"]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_clwx8"]
+[ext_resource type="Texture2D" uid="uid://cqxlxuxhiiom5" path="res://images/Campfire.jpeg" id="1_u6rv4"]
+[ext_resource type="Script" path="res://scripts/Spawner.gd" id="2_vcc28"]
+[ext_resource type="PackedScene" uid="uid://dadbkukhkq6jk" path="res://scenes/ghost.tscn" id="3_cjqv8"]
+[ext_resource type="PackedScene" uid="uid://d3utsg0qgvkfg" path="res://scenes/ghost_1.tscn" id="4_pqf6u"]
+[ext_resource type="Texture2D" uid="uid://b87htyfk6bs2x" path="res://images/You Win.png" id="6_omq5s"]
+[ext_resource type="Texture2D" uid="uid://f1133qo1pt6c" path="res://images/Game Over.png" id="7_phejo"]
+[ext_resource type="FontFile" uid="uid://dv7ucmpeb2mvm" path="res://fonts/PixelifySans-VariableFont_wght.ttf" id="8_56urq"]
+[ext_resource type="AudioStream" uid="uid://3hifoc8g8fy1" path="res://sounds/music.mp3" id="9_jbn3v"]
+
+[sub_resource type="Animation" id="Animation_yvdog"]
+resource_name = "sallanma"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(367, 237), Vector2(367, 247), Vector2(367, 237)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_e3iv3"]
+_data = {
+"sallanma": SubResource("Animation_yvdog")
+}
+
+[sub_resource type="Animation" id="Animation_j3ceh"]
+resource_name = "sallanma"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 1.9),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(367, 237), Vector2(367, 247), Vector2(367, 237)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rpt4h"]
+_data = {
+"sallanma": SubResource("Animation_j3ceh")
+}
+
+[node name="main" type="Node2D" groups=["GameManager"]]
+script = ExtResource("1_clwx8")
+
+[node name="Background" type="TextureRect" parent="."]
+offset_right = 736.0
+offset_bottom = 552.0
+texture = ExtResource("1_u6rv4")
+
+[node name="Marker2D" type="Marker2D" parent="."]
+position = Vector2(368, 314)
+
+[node name="Spawner" type="Node2D" parent="." node_paths=PackedStringArray("target_node")]
+position = Vector2(360, 569)
+script = ExtResource("2_vcc28")
+ghost_scene = ExtResource("3_cjqv8")
+target_node = NodePath("../Marker2D")
+ghost_scene_2 = ExtResource("4_pqf6u")
+
+[node name="Timer" type="Timer" parent="Spawner"]
+autostart = true
+
+[node name="Label_won" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(367, 237.396)
+texture = ExtResource("6_omq5s")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Label_won"]
+process_mode = 3
+libraries = {
+"": SubResource("AnimationLibrary_e3iv3")
+}
+
+[node name="Label_lose" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(367, 240.617)
+scale = Vector2(1.62667, 1.52667)
+texture = ExtResource("7_phejo")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Label_lose"]
+process_mode = 3
+libraries = {
+"": SubResource("AnimationLibrary_rpt4h")
+}
+
+[node name="WinTimer" type="Timer" parent="."]
+process_mode = 3
+wait_time = 10.0
+one_shot = true
+autostart = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="TimeLabel" type="Label" parent="CanvasLayer"]
+offset_right = 166.0
+offset_bottom = 39.0
+theme_override_fonts/font = ExtResource("8_56urq")
+theme_override_font_sizes/font_size = 40
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+stream = ExtResource("9_jbn3v")
+
+[connection signal="timeout" from="Spawner/Timer" to="Spawner" method="_on_timer_timeout"]
+[connection signal="timeout" from="WinTimer" to="." method="_on_win_timer_timeout"]

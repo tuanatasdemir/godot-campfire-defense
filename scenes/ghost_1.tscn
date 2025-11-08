@@ -1,0 +1,21 @@
+[gd_scene load_steps=5 format=3 uid="uid://d3utsg0qgvkfg"]
+
+[ext_resource type="Script" path="res://scripts/ghost_1.gd" id="1_ehjfc"]
+[ext_resource type="Texture2D" uid="uid://ban4b8mhsgwmh" path="res://images/Ghost70 (1).png" id="1_vynqs"]
+[ext_resource type="AudioStream" uid="uid://cfkx1cjaryy7u" path="res://sounds/hallopiki-Click-1.mp3" id="2_sv2al"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pt0jw"]
+radius = 32.0
+height = 80.0
+
+[node name="Ghost1" type="Area2D"]
+script = ExtResource("1_ehjfc")
+death_sound = ExtResource("2_sv2al")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_vynqs")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_pt0jw")
+
+[connection signal="input_event" from="." to="." method="_on_input_event"]
